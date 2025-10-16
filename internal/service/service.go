@@ -2,33 +2,38 @@ package service
 
 import (
 	"errors"
+	"regexp"
 	"strings"
 
 	"github.com/Yandex-Practicum/go1fl-sprint6-final/pkg/morse"
 )
 
+var morsePattern = regexp.MustCompile(`^[.\-/\s]*$`)
+
 func MorseCode(data string) bool {
-
-	// азбука Морзе может содержать такие символы как ".", "-", "/", " "
-	// проводится проверка каждого входящего символа на совпадение символов из азбуки,
-	// если выявится другой символ, то это не код Морзе
-
-	for _, char := range data {
-		if char != '.' && char != '-' && char != '/' && char != ' ' {
-			// данный символ не является частью азбуки Морзе
-			return false
-		}
+	//  Проверяем, содержит ли строка ТОЛЬКО символы, которые могут быть в Морзе
+	if !morsePattern.MatchString(data) {
+		return false // Содержит недопустимые символы
 	}
-	return strings.ContainsAny(data, ".-") // проверяем, чтобы данные не содержали только пробелы или слэши, в случае с проверкой выше
+
+	// Убеждаемся, что это не пустая строка и содержит хотя бы один "сигнал"
+	cleaned := strings.TrimSpace(data)
+	if cleaned == "" {
+		return false
+	}
+
+	//Должен содержать хотя бы точку или тире, иначе это просто пробелы/слэши
+	return strings.ContainsAny(cleaned, ".-")
 }
 
 func ConvertData(data string) (string, error) {
 
-	data = strings.TrimSpace(data) // Удаляем лишние пробелы
+	data = strings.TrimSpace(data)
 	if data == "" {
 		return "", errors.New("входная строка пуста или состоит только из пробельных символов")
 	}
-	if MorseCode(data) { // проверяем соотвветствует ли содержимое Морзе
+
+	if MorseCode(data) {
 		return morse.ToText(data), nil
 	}
 
