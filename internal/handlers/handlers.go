@@ -55,6 +55,7 @@ func UpLoadHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	fileContent := string(dataFile)
+	originalText := fileContent // Сохраняем исходный текст
 
 	convertedText, err := service.ConvertData(fileContent) // конвертация данных через пакет service
 	if err != nil {
@@ -83,8 +84,7 @@ func UpLoadHandler(res http.ResponseWriter, req *http.Request) {
 
 	//  вернуть результат конвертации строки пользователю
 	res.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	// Здесь статус 200 OK будет установлен неявно при первом res.Write()
 	res.Write([]byte("Конвертация завершена. Результат сохранен в файл: " + newFilename + "\n\n"))
-	res.Write([]byte(convertedText))
+	res.Write([]byte(originalText))
 
 }
