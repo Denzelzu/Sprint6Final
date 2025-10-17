@@ -60,7 +60,7 @@ func UpLoadHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Создание локального файла (согласно требованию задания)
+	// Создание локального файла
 	ext := filepath.Ext(header.Filename)
 	if ext == "" {
 		ext = ".txt"
@@ -86,7 +86,7 @@ func UpLoadHandler(res http.ResponseWriter, req *http.Request) {
 	// Формирование сообщения с оригинальным текстом для прохождения теста
 	res.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
-	// Включаем оригинальный текст (fileContent) в ответ.
+	// Включаем оригинальный текст (fileContent) в ответ
 	responseMessage := fmt.Sprintf(
 		"Конвертация завершена. Результат сохранен в файл: %s\n\n"+
 			"Оригинальный текст:\n%s\n\n"+ // Строка с оригинальным текстом
